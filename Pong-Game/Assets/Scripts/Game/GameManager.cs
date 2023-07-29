@@ -32,12 +32,14 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI player2ScoreText;
     public TextMeshProUGUI winText;
     public TextMeshProUGUI secondsText;
+    public Canvas pauseCanvas;
 
     [Header("Scores")]
     private int player1Score = 0;
     private int player2Score = 0;
 
     [Header("Game Settings")]
+    bool isPaused = false;
     public float difficultyFactor = 1;
 
     public void PlaySound(AudioClip audio)
@@ -95,8 +97,27 @@ public class GameManager : MonoBehaviour
 
     public void ReturnToMainMenu()
     {
+        Time.timeScale = 1;
         Cursor.lockState = CursorLockMode.None;
         SceneManager.LoadSceneAsync(0);
+    }
+
+    public void PauseScreen()
+    {
+        if (isPaused)
+        {
+            Time.timeScale = 1;
+            pauseCanvas.gameObject.SetActive(false);
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+        else
+        {
+            Time.timeScale = 0;
+            pauseCanvas.gameObject.SetActive(true);
+            Cursor.lockState = CursorLockMode.None;
+        }
+
+        isPaused = !isPaused;
     }
 
     private void Awake()
@@ -109,7 +130,7 @@ public class GameManager : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Escape))
         {
-            ReturnToMainMenu();
+            PauseScreen();
         }
     }
 
